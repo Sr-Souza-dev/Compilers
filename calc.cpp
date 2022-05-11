@@ -17,14 +17,15 @@ int divi(int n1, int n2){
 int mult(int n1, int n2){
     return n1*n2;
 }
+()
 
 int main(){
     cout<<"Digite sua operação (numero - operador - numero) - (2+6):";
 
-    int n1      = getchar() - 48;
-    char opr    = getchar();
-    int n2      = getchar() - 48;
-    float result  = 0;
+    int n1          = getchar() - 48;
+    char opr        = getchar();
+    int n2          = getchar() - 48;
+    float result    = 0;
 
     if(opr == '+'){
         result = sum(n1,n2);
@@ -38,7 +39,7 @@ int main(){
         cout<<"\n Valores invalidos!\n";
     }
     
-    cout<< "Resultado: "<<result<<endl;
+    cout<<"Resultado: "<<result<<endl;
     
     return 0;
 }
