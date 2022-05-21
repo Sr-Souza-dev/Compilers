@@ -111,6 +111,7 @@ class Syntactic:
                 print("[Syntax error] - content: \"", historic,"\"")
                 print("No definition for the character in this context: \'", states[0]['token'],"\'")
                 print("-------------------------------------------------------------------------- \n")
+                states.pop(0)
                 return historic
         return historic
 
