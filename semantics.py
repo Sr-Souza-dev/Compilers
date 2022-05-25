@@ -1,0 +1,103 @@
+class Semantics:
+    def __init__(self, DOMI, tokens):
+        self.tokens = tokens
+        self.functionsR = ["getchar"]
+        self.DOMI = DOMI
+        self.contexts = []
+
+    def printError(self, content, text):
+        print("[Semantic error] - content: <|> ", content," <|>")
+        print("   "+text)
+        print("-------------------------------------------------------------------------- \n")
+
+    def verifyContexts(self, token):
+        for index in range(0, len(self.contexts[len(self.contexts)-1]["variables"])):
+            if(self.contexts[len(self.contexts)-1]["variables"][index]['name'] == token):
+                return {"okay": True, "type": self.contexts[len(self.contexts)-1]["variables"][index]['type']}
+        
+        for index in range(0, len(self.contexts)-1):
+            if(self.contexts[index]["name"] == token or token  in self.functionsR):
+                return {"okay": True, "type": self.contexts[index]['type']}
+
+        if(token[0] == '\''):
+           
+            return {"okay": True, "type": "char"}
+        elif(token == 'endl' or token in self.functionsR):
+            return {"okay": True, "type": "any"}
+
+        return {"okay": False, "type": ""}
+
+    def check(self):
+        result = True
+        okay = False
+        historic = ""
+        menssage = ""
+        typeT = ""
+        objAux = {}
+        verifyContext = {}
+        for i in range(0, len(self.tokens) - 1):
+            if(len(historic) > 50):
+                    historic = ""
+
+            historic += " " + self.tokens[i]["token"] 
+
+            if((self.tokens[i]["type"].value == self.DOMI.VARIABLE.value or self.tokens[i]["token"] == "main") and self.tokens[i]["token"] != "endl"):
+                
+                if(self.tokens[i-1]["token"] == "int" or self.tokens[i-1]["token"] == "float" or self.tokens[i-1]["token"] == "char" or self.tokens[i-1]["token"] =="string"):
+                    menssage = "A variavel ("+self.tokens[i]["token"]+") já foi declarada nesse escopo"
+                    if(self.tokens[i+1]["token"] == "("):
+                        objAux = {
+                            "name": self.tokens[i]["token"],
+                            "type": self.tokens[i-1]["token"],
+                            "variables": []
+                        }
+                        self.contexts.append(objAux)
+                    else:
+                        for index in range(0, len(self.contexts[len(self.contexts)-1]["variables"])):
+                            if(self.contexts[len(self.contexts)-1]["variables"][index]['name'] == self.tokens[i]["token"]):
+                                okay = True
+                        if(okay):
+                            self.printError(historic,menssage) 
+                            result = False    
+                        else:   
+                            self.contexts[len(self.contexts)-1]["variables"].append({
+                                "name": self.tokens[i]["token"],
+                                "type": self.tokens[i-1]["token"],
+                            })
+                else:
+                    menssage = "A variavel ("+self.tokens[i]["token"]+") não foi declarada no escopo de sua utilização"
+                    verifyContext = self.verifyContexts(self.tokens[i]["token"])
+                    okay = verifyContext["okay"]
+                    typeT = verifyContext["type"]
+
+                    if(okay):
+                        okay = True
+                        menssage = "Você tentou utilizar atributos de tipos diferentes em uma mesma operação"
+                        if(self.tokens[i+1]["type"].value == self.DOMI.ASSIGNMENT.value or self.tokens[i+1]["type"].value  == self.DOMI.COMPARATIVE.value or self.tokens[i+1]["type"].value  == self.DOMI.OPERATOR.value):
+                            verifyContext = self.verifyContexts(self.tokens[i+2]["token"])
+                            if(verifyContext["type"] != typeT) and (not self.tokens[i+2]["token"] in self.functionsR):
+                                if (typeT == "float" and verifyContext["type"] == "int") or (typeT == "int" and verifyContext["type"] == "float" and self.tokens[i+1]["token"] != "=" or verifyContext["type"] == "any"):
+                                    okay = True
+                                else:
+                                    okay = False
+                                    historic += self.tokens[i+1]["token"] + " " + self.tokens[i+2]["token"]
+                        if(not okay):
+                            self.printError(historic,menssage)
+                            result = False
+
+                    else:   
+                        self.printError(historic,menssage)
+                        result = False
+                        
+                    okay = False
+
+        return result
+
+                
+
+                        
+                            
+                    
+        
+     
+

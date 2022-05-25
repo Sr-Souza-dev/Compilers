@@ -35,7 +35,7 @@ class Lexicon:
             elif (item in self.delimiters):      self.defineToken(item, self.DOMI.DELIMITER)
             elif (item in self.operator):        self.defineToken(item, self.DOMI.OPERATOR)
             elif (item in self.comparation):     self.defineToken(item, self.DOMI.COMPARATIVE)
-            elif (re.search("\"", item)):        self.defineToken(item, self.DOMI.LITERAL)
+            elif (re.search("\"|\'", item)):        self.defineToken(item, self.DOMI.LITERAL)
             elif (re.search(r"\D", item)):       self.defineToken(item, self.DOMI.VARIABLE)
             else:                                self.defineToken(item, self.DOMI.NUMBER)
 
@@ -45,6 +45,10 @@ class Lexicon:
                 self.separate(t[0:t.find("\"")])
                 self.items.append(t[t.find("\""):t.rfind("\"")+1])
                 self.separate(t[t.rfind("\"")+1:])
+            elif(re.search("\'", t)):
+                self.separate(t[0:t.find("\'")])
+                self.items.append(t[t.find("\'"):t.rfind("\'")+1])
+                self.separate(t[t.rfind("\'")+1:])
             else:
                 self.separate(t)
         self.categorize()

@@ -1,6 +1,7 @@
 from enum import IntEnum
 from lexicon import Lexicon
 from syntactic import Syntactic
+from semantics import Semantics
 
 
 
@@ -18,8 +19,15 @@ class DOMI(IntEnum):
 lexicon = Lexicon(DOMI, open("calc.cpp", "r"))
 tokens = lexicon.tokenizer()
 
+
 syntactic = Syntactic(DOMI, tokens)
-syntactic.analyse()
+okay = [syntactic.analyse()]
+
+semantic = Semantics(DOMI, tokens)
+okay.append(semantic.check())
+
+if(okay[0] and okay[1]):
+    print("Congratulations, the algorithm is perfect for parsing!")
 
 
 

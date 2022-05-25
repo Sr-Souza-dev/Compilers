@@ -30,16 +30,17 @@ class Syntactic:
             'int':                                  ['main', str(self.DOMI.VARIABLE.value)],
             'string':                               [str(self.DOMI.VARIABLE.value)],
             'float':                                [str(self.DOMI.VARIABLE.value)],
-            'char':                                [str(self.DOMI.VARIABLE.value)],
-            str(self.DOMI.VARIABLE.value):                ['(', '='],
+            'char':                                 [str(self.DOMI.VARIABLE.value)],
+            str(self.DOMI.VARIABLE.value):          ['(', '=', ';'],
             # Declaração de Função
             'main':                                 ['('],
-            '(':                                    ['int1','string1', 'float1', ')'],
+            '(':                                    ['int1','string1', 'float1','char1', ')'],
             'int1':                                 [str(self.DOMI.VARIABLE.value)+'1'],
             'string1':                              [str(self.DOMI.VARIABLE.value)+'1'],
             'float1':                               [str(self.DOMI.VARIABLE.value)+'1'],
-            str(self.DOMI.VARIABLE.value)+'1':            [',',')'],
-            ',':                                    ['int1','string1','float1'],
+            'char1':                                [str(self.DOMI.VARIABLE.value)+'1'],
+            str(self.DOMI.VARIABLE.value)+'1':      [',',')',';'],
+            ',':                                    ['int1','string1','float1', 'char1'],
             ')':[],                                                             # ***** Terminal *****
             # Declaração Variavel
             '=':                                [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value)],
@@ -97,21 +98,18 @@ class Syntactic:
             elif((str(states[0]['type'].value)+"4") in currentState):
                 currentState = self.tree[str(states[0]['type'].value) +"4"]
                 states.pop(0)
-
             elif(states[0]['token'] == "{"):
                 states.pop(0)
                 break
-
             elif(reading == True and states[0]['token'] == "<<"):
                 currentState = self.tree["<<1"]
                 states.pop(0)
-
             else:
+                print("      ***       ",states[0]['token'])
                 self.okay = False
                 print("[Syntax error] - content: \"", historic,"\"")
                 print("No definition for the character in this context: \'", states[0]['token'],"\'")
                 print("-------------------------------------------------------------------------- \n")
-                states.pop(0)
                 return historic
         return historic
 
@@ -184,5 +182,4 @@ class Syntactic:
             print("no symbol expected: \'",self.stack[len(self.stack) - 1],"\'")
             return
 
-        elif(self.okay):
-            print("Congratulations, the algorithm is perfect for parsing syntactically!")        
+        return self.okay        
