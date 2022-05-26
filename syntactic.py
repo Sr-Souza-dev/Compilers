@@ -105,7 +105,6 @@ class Syntactic:
                 currentState = self.tree["<<1"]
                 states.pop(0)
             else:
-                print("      ***       ",states[0]['token'])
                 self.okay = False
                 print("[Syntax error] - content: \"", historic,"\"")
                 print("No definition for the character in this context: \'", states[0]['token'],"\'")

@@ -4,6 +4,7 @@ class Semantics:
         self.functionsR = ["getchar"]
         self.DOMI = DOMI
         self.contexts = []
+        aux =""
 
     def printError(self, content, text):
         print("[Semantic error] - content: <|> ", content," <|>")
@@ -27,13 +28,27 @@ class Semantics:
 
         return {"okay": False, "type": ""}
 
+
+    def verifyType(self, token, verifyContext):
+        if(token["type"].value == self.DOMI.NUMBER.value):
+            verifyContext["okay"] = True
+            verifyContext["type"] = "int"
+        elif(token["type"].value == self.DOMI.LITERAL.value):
+            verifyContext["okay"] = True
+            if(len(token["token"]) <= 3):
+                verifyContext["type"] = "char"
+            else:
+                verifyContext["type"] = "string"
+        return verifyContext
+                
     def check(self):
         result = True
         okay = False
+        returned = False
         historic = ""
         menssage = ""
         typeT = ""
-        objAux = {}
+        objAux = False
         verifyContext = {}
         for i in range(0, len(self.tokens) - 1):
             if(len(historic) > 50):
@@ -41,17 +56,29 @@ class Semantics:
 
             historic += " " + self.tokens[i]["token"] 
 
-            if((self.tokens[i]["type"].value == self.DOMI.VARIABLE.value or self.tokens[i]["token"] == "main") and self.tokens[i]["token"] != "endl"):
+            if(self.tokens[i]["token"] == "return"):
+                # print("Func: ",self.contexts[len(self.contexts)-1]['name'])
+                returned = True
+
+            elif((self.tokens[i]["type"].value == self.DOMI.NUMBER.value or self.tokens[i]["type"].value == self.DOMI.LITERAL.value or self.tokens[i]["type"].value == self.DOMI.VARIABLE.value or self.tokens[i]["token"] == "main") and self.tokens[i]["token"] != "endl"):
                 
                 if(self.tokens[i-1]["token"] == "int" or self.tokens[i-1]["token"] == "float" or self.tokens[i-1]["token"] == "char" or self.tokens[i-1]["token"] =="string"):
                     menssage = "A variavel ("+self.tokens[i]["token"]+") já foi declarada nesse escopo"
                     if(self.tokens[i+1]["token"] == "("):
+
+                        if(not(objAux == False or returned)):
+                            menssage = "Retorno da função \'" + self.contexts[len(self.contexts)-1]["name"] + "\' não foi encontrado"
+                            self.printError(historic,menssage)
+                            result = False
+
                         objAux = {
                             "name": self.tokens[i]["token"],
                             "type": self.tokens[i-1]["token"],
                             "variables": []
                         }
                         self.contexts.append(objAux)
+                        returned = False
+                        
                     else:
                         for index in range(0, len(self.contexts[len(self.contexts)-1]["variables"])):
                             if(self.contexts[len(self.contexts)-1]["variables"][index]['name'] == self.tokens[i]["token"]):
@@ -66,21 +93,32 @@ class Semantics:
                             })
                 else:
                     menssage = "A variavel ("+self.tokens[i]["token"]+") não foi declarada no escopo de sua utilização"
-                    verifyContext = self.verifyContexts(self.tokens[i]["token"])
+
+                    verifyContext = self.verifyType(self.tokens[i], self.verifyContexts(self.tokens[i]["token"]))
                     okay = verifyContext["okay"]
                     typeT = verifyContext["type"]
 
+                  
                     if(okay):
+                        if not ((self.contexts[len(self.contexts)-1]['type'] == typeT) or (self.contexts[len(self.contexts)-1]['type'] == "float" and typeT == "int")) and returned:
+                            print("Func: ",self.contexts[len(self.contexts)-1]['type'], "   Return: ",typeT)
+                            menssage = "Retorno da função \'" + self.contexts[len(self.contexts)-1]["name"] + "\' não condiz com sua atribuição"
+                            self.printError(historic,menssage)
+                            result = False
+
                         okay = True
                         menssage = "Você tentou utilizar atributos de tipos diferentes em uma mesma operação"
                         if(self.tokens[i+1]["type"].value == self.DOMI.ASSIGNMENT.value or self.tokens[i+1]["type"].value  == self.DOMI.COMPARATIVE.value or self.tokens[i+1]["type"].value  == self.DOMI.OPERATOR.value):
-                            verifyContext = self.verifyContexts(self.tokens[i+2]["token"])
+                            verifyContext = self.verifyType(self.tokens[i+2], self.verifyContexts(self.tokens[i+2]["token"]))
                             if(verifyContext["type"] != typeT) and (not self.tokens[i+2]["token"] in self.functionsR):
-                                if (typeT == "float" and verifyContext["type"] == "int") or (typeT == "int" and verifyContext["type"] == "float" and self.tokens[i+1]["token"] != "=" or verifyContext["type"] == "any"):
+                                if (typeT == "float" and verifyContext["type"] == "int") or (typeT == "int" and verifyContext["type"] == "float" and self.tokens[i+1]["token"] != "=" or verifyContext["type"] == "any" or self.tokens[i+1]["token"] == "<<"):
                                     okay = True
                                 else:
                                     okay = False
                                     historic += self.tokens[i+1]["token"] + " " + self.tokens[i+2]["token"]
+
+                                
+                                
                         if(not okay):
                             self.printError(historic,menssage)
                             result = False

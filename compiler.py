@@ -19,6 +19,8 @@ class DOMI(IntEnum):
 lexicon = Lexicon(DOMI, open("calc.cpp", "r"))
 tokens = lexicon.tokenizer()
 
+# for item in tokens:
+#     print(type(item['token']), item['token'], item['type'].value)
 
 syntactic = Syntactic(DOMI, tokens)
 okay = [syntactic.analyse()]
