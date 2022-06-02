@@ -1,7 +1,7 @@
 from enum import IntEnum
-from lexicon import Lexicon
-from syntactic import Syntactic
-from semantics import Semantics
+from front.lexicon import Lexicon
+from front.syntactic import Syntactic
+from front.semantics import Semantics
 
 
 
@@ -16,7 +16,7 @@ class DOMI(IntEnum):
     NUMBER       = 7           # Number
 
 
-lexicon = Lexicon(DOMI, open("calc.cpp", "r"))
+lexicon = Lexicon(DOMI, open("codeT/calc.cpp", "r"))
 tokens = lexicon.tokenizer()
 
 # for item in tokens:
