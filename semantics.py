@@ -45,6 +45,7 @@ class Semantics:
         result = True
         okay = False
         returned = False
+        atrib = False
         historic = ""
         menssage = ""
         typeT = ""
@@ -57,7 +58,6 @@ class Semantics:
             historic += " " + self.tokens[i]["token"] 
 
             if(self.tokens[i]["token"] == "return"):
-                # print("Func: ",self.contexts[len(self.contexts)-1]['name'])
                 returned = True
 
             elif((self.tokens[i]["type"].value == self.DOMI.NUMBER.value or self.tokens[i]["type"].value == self.DOMI.LITERAL.value or self.tokens[i]["type"].value == self.DOMI.VARIABLE.value or self.tokens[i]["token"] == "main") and self.tokens[i]["token"] != "endl"):
@@ -80,6 +80,7 @@ class Semantics:
                         returned = False
                         
                     else:
+                        atrib = True
                         for index in range(0, len(self.contexts[len(self.contexts)-1]["variables"])):
                             if(self.contexts[len(self.contexts)-1]["variables"][index]['name'] == self.tokens[i]["token"]):
                                 okay = True
@@ -91,7 +92,8 @@ class Semantics:
                                 "name": self.tokens[i]["token"],
                                 "type": self.tokens[i-1]["token"],
                             })
-                else:
+                if(not (self.tokens[i-1]["token"] == "int" or self.tokens[i-1]["token"] == "float" or self.tokens[i-1]["token"] == "char" or self.tokens[i-1]["token"] =="string") or atrib):
+                    atrib = False
                     menssage = "A variavel ("+self.tokens[i]["token"]+") não foi declarada no escopo de sua utilização"
 
                     verifyContext = self.verifyType(self.tokens[i], self.verifyContexts(self.tokens[i]["token"]))

@@ -26,9 +26,10 @@ int main(){
     cout<<"Digite sua operação (numero - operador - numero) - (2+6):";
 
     int n1          = getchar() - 48;
-    char opr        = 50;
+    char opr        = getchar();
     int n2          = getchar() - 48;
     float result    = 0; 
+
 
     if(opr == '+'){
         result = sum(n1,n2);
