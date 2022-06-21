@@ -3,10 +3,10 @@ import re
 class Lexicon:
 
     def __init__(self, domi, file):
-        self.reserved        = ["if", "while", "main", "const", "cout", "int", "char", "float", "string", "else", "using", "namespace","std", "return", "true", "false", "iostream", "#include", "#define"]
+        self.reserved        = ["if", "while", "main", "stdio.h", "const", "cout", "int", "char", "float", "string", "else", "using", "namespace","std", "return", "true", "false", "iostream", "#include", "#define"]
         self.assignment      = ["<<",">>","="]
         self.delimiters      = ["{","}","(",")","[","]", ";", ","]
-        self.operator        = ["+","-","*","/"]
+        self.operator        = ["+","-","*","/", "%"]
         self.comparation     = ["==","<=",">=","!=", "<", ">"]
 
         self.arq             = file
@@ -16,7 +16,7 @@ class Lexicon:
         self.tokens         = []
 
     def separate(self,word):
-        for item in re.findall(r'(\w*|#include|#define|<<|==|<=|>=|!=|\W)',word):
+        for item in re.findall(r'(#include|#define|stdio.h|<<|==|<=|>=|!=|\w*|\W)',word):
             item = item.strip()     
             if(item != ""):
                 self.items.append(item)

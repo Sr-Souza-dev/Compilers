@@ -33,33 +33,34 @@ class Syntactic:
             'char':                                 [str(self.DOMI.VARIABLE.value)],
             str(self.DOMI.VARIABLE.value):          ['(', '=', ';'],
             # Declaração de Função
+            'for':                                  ['('],
             'main':                                 ['('],
             '(':                                    ['int1','string1', 'float1','char1', ')'],
             'int1':                                 [str(self.DOMI.VARIABLE.value)+'1'],
             'string1':                              [str(self.DOMI.VARIABLE.value)+'1'],
             'float1':                               [str(self.DOMI.VARIABLE.value)+'1'],
             'char1':                                [str(self.DOMI.VARIABLE.value)+'1'],
-            str(self.DOMI.VARIABLE.value)+'1':      [',',')',';'],
+            str(self.DOMI.VARIABLE.value)+'1':      [',',')',';','='],
             ',':                                    ['int1','string1','float1', 'char1'],
             ')':[],                                                             # ***** Terminal *****
             # Declaração Variavel
-            '=':                                [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value)],
-            str(self.DOMI.VARIABLE.value)+'2':        [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";",'(1'],
-            str(self.DOMI.NUMBER.value):              [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";"],
-            str(self.DOMI.LITERAL.value):             [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";"],
-            str(self.DOMI.OPERATOR.value):            [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value)], 
-            str(self.DOMI.COMPARATIVE.value):         [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value)],
+            '=':                                      [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value)],
+            str(self.DOMI.VARIABLE.value)+'2':        [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";",'(1',')1',',1', '='],
+            str(self.DOMI.NUMBER.value):              [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";", ')1', ',1'],
+            str(self.DOMI.LITERAL.value):             [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";", ')1', ',1'],
+            str(self.DOMI.OPERATOR.value):            [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value),'(1', str(self.DOMI.OPERATOR.value), ')1'], 
+            str(self.DOMI.COMPARATIVE.value):         [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value),'(1'],
 
             # * Atribuição: Função-Variavel
-            str(self.DOMI.VARIABLE.value)+'3':            ['(1', '='],
-            '(1':                                   [str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1', ')1'],
+            str(self.DOMI.VARIABLE.value)+'3':            ['(1', '=',str(self.DOMI.COMPARATIVE.value), str(self.DOMI.OPERATOR.value)],
+            '(1':                                         [str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1', ')1', '(1'],
             str(self.DOMI.VARIABLE.value)+'4':            [str(self.DOMI.OPERATOR.value)+'1', str(self.DOMI.COMPARATIVE.value) + '1', ')1', ',1'],
-            str(self.DOMI.NUMBER.value)+'1':              [str(self.DOMI.OPERATOR.value)+'1', str(self.DOMI.COMPARATIVE.value) + '1', ')1', ',1'],
+            str(self.DOMI.NUMBER.value)+'1':              [str(self.DOMI.OPERATOR.value)+'1', str(self.DOMI.COMPARATIVE.value) + '1', ')1', ',1', ],
             str(self.DOMI.LITERAL.value)+'1':             [str(self.DOMI.OPERATOR.value)+'1', str(self.DOMI.COMPARATIVE.value) + '1', ')1', ',1'],
             str(self.DOMI.OPERATOR.value)+'1':            ['(1', str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1'],
             str(self.DOMI.COMPARATIVE.value)+'1':         ['(1', str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1'],
-            ',1':                                   ['(1', str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1', ],
-            ')1':                                   [',1', ';', str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value)],
+            ',1':                                         ['(1', str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1', ],
+            ')1':                                         [',1', ';', str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ')1'],
 
             # * Print 
             'cout':                      ['<<1'],
@@ -79,8 +80,7 @@ class Syntactic:
             if(states[0]['token'] in currentState):
                 currentState = self.tree[states[0]['token']]
                 states.pop(0)
-            elif((states[0]['token'] + "1") in currentState):
-                historic += states[0]['token']+"1"
+            elif((states[0]['token'] + "1") in currentState):     
                 currentState = self.tree[states[0]['token']+"1"]
                 states.pop(0)
             elif(str(states[0]['type'].value) in currentState):
@@ -110,6 +110,7 @@ class Syntactic:
                 print("No definition for the character in this context: \'", states[0]['token'],"\'")
                 print("-------------------------------------------------------------------------- \n")
                 return historic
+        historic += " " + states[0]['token']  
         return historic
 
     def stackControl(self, state):
@@ -141,9 +142,7 @@ class Syntactic:
         errorsStates = []
         
         while(states):
-                    
-            historic += " " + states[0]['token']    
-
+   
             if(states[0]['token'] in self.tree and states[0]['token'] != "(" and states[0]['token'] != ")" and states[0]['token'] != "{" and states[0]['token'] != "}"):
                 currentState = self.tree[states[0]['token']]
                 states.pop(0)

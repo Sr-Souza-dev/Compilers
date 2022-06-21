@@ -1,7 +1,7 @@
 class Semantics:
     def __init__(self, DOMI, tokens):
         self.tokens = tokens
-        self.functionsR = ["getchar"]
+        self.functionsR = ["getchar","for"]
         self.DOMI = DOMI
         self.contexts = []
         aux =""
@@ -43,6 +43,7 @@ class Semantics:
                 
     def check(self):
         result = True
+        lastType = 0
         okay = False
         returned = False
         atrib = False
@@ -110,14 +111,22 @@ class Semantics:
 
                         okay = True
                         menssage = "Você tentou utilizar atributos de tipos diferentes em uma mesma operação"
+
                         if(self.tokens[i+1]["type"].value == self.DOMI.ASSIGNMENT.value or self.tokens[i+1]["type"].value  == self.DOMI.COMPARATIVE.value or self.tokens[i+1]["type"].value  == self.DOMI.OPERATOR.value):
-                            verifyContext = self.verifyType(self.tokens[i+2], self.verifyContexts(self.tokens[i+2]["token"]))
-                            if(verifyContext["type"] != typeT) and (not self.tokens[i+2]["token"] in self.functionsR):
-                                if (typeT == "float" and verifyContext["type"] == "int") or (typeT == "int" and verifyContext["type"] == "float" and self.tokens[i+1]["token"] != "=" or verifyContext["type"] == "any" or self.tokens[i+1]["token"] == "<<"):
-                                    okay = True
-                                else:
-                                    okay = False
-                                    historic += self.tokens[i+1]["token"] + " " + self.tokens[i+2]["token"]
+                            while(True):
+                                verifyContext = self.verifyType(self.tokens[i+2], self.verifyContexts(self.tokens[i+2]["token"]))
+                                if(verifyContext["type"] != typeT) and (not self.tokens[i+2]["token"] in self.functionsR):
+                                    if (typeT == "float" and verifyContext["type"] == "int") or (typeT == "int" and verifyContext["type"] == "float" and self.tokens[i+1]["token"] != "=" or verifyContext["type"] == "any" or self.tokens[i+1]["token"] == "<<"):
+                                        okay = True
+                                        break
+                                    elif self.tokens[i+2]["token"] == "(" or self.tokens[i+2]["token"] == ")" or self.tokens[i+2]["token"] == "+" or self.tokens[i+2]["token"] == "-":
+                                        i += 1
+                                    else:
+                                        okay = False
+                                        historic += self.tokens[i+1]["token"] + " " + self.tokens[i+2]["token"]
+                                        break
+                                break
+                                    
 
                                 
                                 
@@ -130,6 +139,7 @@ class Semantics:
                         result = False
                         
                     okay = False
+                lastType = self.tokens[i]["type"].value
 
         return result
 

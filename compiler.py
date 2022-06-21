@@ -16,7 +16,7 @@ class DOMI(IntEnum):
     NUMBER       = 7           # Number
 
 
-lexicon = Lexicon(DOMI, open("codeT/calc.cpp", "r"))
+lexicon = Lexicon(DOMI, open("codeT/code0.cpp", "r"))
 tokens = lexicon.tokenizer()
 
 # for item in tokens:
