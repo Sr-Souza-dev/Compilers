@@ -1,14 +1,13 @@
-#include <stdio.h>
+#include <stdio.h> //declaracao de biblioteca
 
-int main()
+int main(int argc, char argv) //função main
 {
-    int a=0;
-    int b=0;
-    int c=0;
-    int d=0;
-    int e=0;
-    
-    a = "zero" / "zero";
-    
-    return 0;
+    int arg1 = 5;
+    int arg2 = 6.75;
+    int arg3 = 4.35;
+    int arg4 = 3,33;
+
+    resultado = (arg1 + arg2 - arg3 * arg4)/arg1 * arg2 - arg3 + arg4;
+
+    return arg1;
 }

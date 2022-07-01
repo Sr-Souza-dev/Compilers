@@ -3,8 +3,8 @@ import re
 class Lexicon:
 
     def __init__(self, domi, file):
-        self.reserved        = ["if", "while", "main", "stdio.h", "const", "cout", "int", "char", "float", "string", "else", "using", "namespace","std", "return", "true", "false", "iostream", "#include", "#define"]
-        self.assignment      = ["<<",">>","="]
+        self.reserved        = ["if", "while", "stdio.h", "const", "void", "cout", "int", "char", "float", "string", "else", "using", "namespace","std", "return", "true", "false", "iostream", "#include", "#define"]
+        self.assignment      = ["<<",">>","=","&"]
         self.delimiters      = ["{","}","(",")","[","]", ";", ","]
         self.operator        = ["+","-","*","/", "%"]
         self.comparation     = ["==","<=",">=","!=", "<", ">"]
@@ -16,7 +16,7 @@ class Lexicon:
         self.tokens         = []
 
     def separate(self,word):
-        for item in re.findall(r'(#include|#define|stdio.h|<<|==|<=|>=|!=|\w*|\W)',word):
+        for item in re.findall(r'(#include|#define|[0-9]+.[0-9]+|stdio.h|<<|==|<=|>=|!=|\w*|\W)',word):
             item = item.strip()     
             if(item != ""):
                 self.items.append(item)
@@ -35,12 +35,15 @@ class Lexicon:
             elif (item in self.delimiters):      self.defineToken(item, self.DOMI.DELIMITER)
             elif (item in self.operator):        self.defineToken(item, self.DOMI.OPERATOR)
             elif (item in self.comparation):     self.defineToken(item, self.DOMI.COMPARATIVE)
-            elif (re.search("\"|\'", item)):        self.defineToken(item, self.DOMI.LITERAL)
-            elif (re.search(r"\D", item)):       self.defineToken(item, self.DOMI.VARIABLE)
+            elif (re.search("\"|\'", item)):     self.defineToken(item, self.DOMI.LITERAL)
+            elif (re.search("\D", item) and 
+                (not re.match('[0-9]+.[0-9]+',item))):       self.defineToken(item, self.DOMI.VARIABLE)
             else:                                self.defineToken(item, self.DOMI.NUMBER)
 
     def tokenizer(self):
         for t in self.arq:
+            if(re.search("//", t)):
+                t = t[0:t.find("//")]
             if(re.search("\"", t)):
                 self.separate(t[0:t.find("\"")])
                 self.items.append(t[t.find("\""):t.rfind("\"")+1])

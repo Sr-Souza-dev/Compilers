@@ -1,8 +1,8 @@
-#include <iostream>
+#include <iostream>                 //Test 1
 
-using namespace std;
+using namespace std;                // Test 2
 
-int sum(int n1, int n2){
+int sum(int n1, int n2){            // TEste 3 
     
     return n1+n2;
 }
@@ -27,7 +27,7 @@ int main(){
 
     int n1          = getchar() - 48;
     char opr        = getchar();
-    int n2          = getchar() - 48;
+    int n2          = getchar() - 48;               // Teste 4
     float result    = 0; 
 
 

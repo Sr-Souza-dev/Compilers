@@ -1,9 +1,9 @@
 from enum import IntEnum
+from fileinput import filename
 from front.lexicon import Lexicon
 from front.syntactic import Syntactic
 from front.semantics import Semantics
-
-
+from back.generate import Generate
 
 class DOMI(IntEnum):
     RESERVED     = 0,          # Reservada
@@ -16,11 +16,9 @@ class DOMI(IntEnum):
     NUMBER       = 7           # Number
 
 
-lexicon = Lexicon(DOMI, open("codeT/code0.cpp", "r"))
+fileName = 'code3'
+lexicon = Lexicon(DOMI, open(f"codeT/{fileName}.cpp", "r"))
 tokens = lexicon.tokenizer()
-
-# for item in tokens:
-#     print(type(item['token']), item['token'], item['type'].value)
 
 syntactic = Syntactic(DOMI, tokens)
 okay = [syntactic.analyse()]
@@ -29,6 +27,8 @@ semantic = Semantics(DOMI, tokens)
 okay.append(semantic.check())
 
 if(okay[0] and okay[1]):
+    generate = Generate(DOMI, tokens, fileName)
+    generate.generate()
     print("Congratulations, the algorithm is perfect for parsing!")
 
 

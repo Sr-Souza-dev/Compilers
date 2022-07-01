@@ -1,15 +1,23 @@
-#include <stdio.h>
+#include <stdio.h> //declaracao de biblioteca
 
-int main()
+int main() //função main
 {
-    int a=10;
-    int b=5;
-    int c=7;
-    int d=11;
-    int e=15;
+    int arg1,arg2,arg3; //declaracao de inteiros
+    float arg4, arg5, arg6; //declaracao de floats
+    scanf("%i", &arg1); //recebe o argumento 1
+    scanf("%i", &arg2); //recebe o argumento 2
+    scanf("%f", &arg4); //recebe o argumento 3
+    scanf("%f", &arg5); //recebe o argumento 4
     
-    a = b + c - 7 * e / a * d - a + 10 / (c+d+10);
-    b = c + "casa";
+    arg6 = arg1 +  arg2 * arg4; //realizacao uma operação
+    arg3 = arg2 - arg1 * arg6; //realiza outra operacao
+    float operacao = arg1 * arg2 / arg3 - arg4 / arg5 * arg6; //realiza a última operação
+    if (arg6 > arg3){
+	arg5 = arg2 * arg4;
+    }
+    else{
+	arg1 = arg5 / arg6;
+    }
 
-    return 0;
+    return arg2; //finaliza a função main
 }

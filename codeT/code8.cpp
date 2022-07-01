@@ -1,14 +1,28 @@
-#include <stdio.h>
+#include <stdio.h> //declaracao de biblioteca
 
-int main()
+float soma (float operando1, float operando2){
+      return operando1+operando2;
+}
+float subtracao (float operando1, float operando2){
+      return operando1-operando2;
+}
+float divisao (float operando1, float operando2){
+      return operando1/operando2;
+}
+float multiplicacao (float operando1, float operando2){
+      return operando1/operando2;
+}
+void testar (float a){
+      a = 10;
+}
+
+int main(int argc, char argv) //função main
 {
-    int a=0;
-    int b=0;
-    int c=0;
-    int d=0;
-    int e=0;
-    
-    a = "dois" + "tres";
-    
-    return 0;
+    int arg1 = 5.25;
+    int main = 5;
+    int testar = 15;
+    int arg2 = 6.75;
+    int arg3 = soma(arg1,arg2) - subtracao(arg2,arg1) * multiplicacao (arg1,arg2) / divisao(arg2,arg1);
+    printf ("%i", arg3);
+    return arg1;
 }

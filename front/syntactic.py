@@ -26,15 +26,18 @@ class Syntactic:
             'std':                          [';'],   
             ';':[],                                                                   # ***** Terminal *****
 
+            '&':                            [str(self.DOMI.VARIABLE.value)+'4'],
+
             # * Declaração: Variavel - Função
             'int':                                  ['main', str(self.DOMI.VARIABLE.value)],
             'string':                               [str(self.DOMI.VARIABLE.value)],
             'float':                                [str(self.DOMI.VARIABLE.value)],
             'char':                                 [str(self.DOMI.VARIABLE.value)],
-            str(self.DOMI.VARIABLE.value):          ['(', '=', ';'],
+            'void':                                 [str(self.DOMI.VARIABLE.value)],
+            str(self.DOMI.VARIABLE.value):          ['(', '=', ';',',1'],
             # Declaração de Função
             'for':                                  ['('],
-            'main':                                 ['('],
+            'main':                                 ['(','='],
             '(':                                    ['int1','string1', 'float1','char1', ')'],
             'int1':                                 [str(self.DOMI.VARIABLE.value)+'1'],
             'string1':                              [str(self.DOMI.VARIABLE.value)+'1'],
@@ -44,7 +47,7 @@ class Syntactic:
             ',':                                    ['int1','string1','float1', 'char1'],
             ')':[],                                                             # ***** Terminal *****
             # Declaração Variavel
-            '=':                                      [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value)],
+            '=':                                      [str(self.DOMI.VARIABLE.value)+'2', str(self.DOMI.NUMBER.value), str(self.DOMI.LITERAL.value), '(1'],
             str(self.DOMI.VARIABLE.value)+'2':        [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";",'(1',')1',',1', '='],
             str(self.DOMI.NUMBER.value):              [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";", ')1', ',1'],
             str(self.DOMI.LITERAL.value):             [str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ";", ')1', ',1'],
@@ -54,12 +57,12 @@ class Syntactic:
             # * Atribuição: Função-Variavel
             str(self.DOMI.VARIABLE.value)+'3':            ['(1', '=',str(self.DOMI.COMPARATIVE.value), str(self.DOMI.OPERATOR.value)],
             '(1':                                         [str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1', ')1', '(1'],
-            str(self.DOMI.VARIABLE.value)+'4':            [str(self.DOMI.OPERATOR.value)+'1', str(self.DOMI.COMPARATIVE.value) + '1', ')1', ',1'],
+            str(self.DOMI.VARIABLE.value)+'4':            [str(self.DOMI.OPERATOR.value)+'1', str(self.DOMI.COMPARATIVE.value) + '1', ')1', ',1','=',';'],
             str(self.DOMI.NUMBER.value)+'1':              [str(self.DOMI.OPERATOR.value)+'1', str(self.DOMI.COMPARATIVE.value) + '1', ')1', ',1', ],
             str(self.DOMI.LITERAL.value)+'1':             [str(self.DOMI.OPERATOR.value)+'1', str(self.DOMI.COMPARATIVE.value) + '1', ')1', ',1'],
             str(self.DOMI.OPERATOR.value)+'1':            ['(1', str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1'],
             str(self.DOMI.COMPARATIVE.value)+'1':         ['(1', str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1'],
-            ',1':                                         ['(1', str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1', ],
+            ',1':                                         ['(1', str(self.DOMI.VARIABLE.value)+'4', str(self.DOMI.NUMBER.value)+'1', str(self.DOMI.LITERAL.value)+'1', '&'],
             ')1':                                         [',1', ';', str(self.DOMI.OPERATOR.value), str(self.DOMI.COMPARATIVE.value), ')1'],
 
             # * Print 
@@ -77,6 +80,7 @@ class Syntactic:
                 not self.stackControl(states[0])
             if(states[0]['token'] == "<<"):
                 reading = True                                           
+        
             if(states[0]['token'] in currentState):
                 currentState = self.tree[states[0]['token']]
                 states.pop(0)
