@@ -1,6 +1,7 @@
 def main():
-   arg1,arg2,arg3
-   arg4,arg5,arg6
+   arg1 = 23
+   arg4 = arg1
+   arg5 = 18
    arg1 = input("%i")
    arg2 = input("%i")
    arg4 = input("%f")
@@ -16,3 +17,5 @@ def main():
    operacao = arg1*arg2/arg3-arg4/arg5*arg6
    return 0
 
+
+main()
