@@ -18,6 +18,7 @@ class Generate:
         okay = True
         declaration = False
         separate = True
+        contPar = 0
         isMain = False
 
         for index in range(0, len(self.tokens)): 
@@ -25,6 +26,12 @@ class Generate:
             if(self.tokens[index]["token"] == "main" and self.tokens[index-1]["token"] in self.types and self.tokens[index+1]["token"] == "("):       
                 isMain = True
 
+            if(self.tokens[index]["token"] == "("):
+                contPar = contPar + 1
+
+            if(self.tokens[index]["token"] == ")"):
+                contPar = contPar - 1
+        
             if(self.tokens[index]["token"]  in self.types and self.tokens[index+2]["token"]  == "(" and okay):
                 self.line = "def "
                 ident = 0
@@ -63,19 +70,19 @@ class Generate:
                 else:
                     self.line += self.tokens[index]["token"] + " "
 
-            elif(self.tokens[index]["token"] in self.types) and okay:
+            elif(self.tokens[index]["token"] in self.types) and okay and contPar <= 0:
                 declaration = True
 
             elif(not(self.tokens[index]["token"] in self.types) and okay):
                 if declaration:
-                    if(self.tokens[index]["type"].value == self.DOMI.VARIABLE.value and self.tokens[index+1]["token"] != "," and self.tokens[index+1]["token"] != ";"):
+                    if((self.tokens[index]["type"].value == self.DOMI.VARIABLE.value and self.tokens[index+1]["token"] != "," and self.tokens[index+1]["token"] != ";") or contPar > 0):
                         separate = False
                     
                 else:
                     self.line += self.tokens[index]["token"] 
 
                 if(not separate and declaration):
-                    if(self.tokens[index]["token"] == ","):
+                    if(self.tokens[index]["token"] == "," and contPar <= 0):
                         self.line += "\n"
                         file.write(self.line)
                         self.cleanLine(ident)

@@ -7,6 +7,7 @@ float subtracao (float operando1, float operando2){
       return operando1-operando2;
 }
 float divisao (float operando1, float operando2){
+      int casa;
       return operando1/operando2;
 }
 float multiplicacao (float operando1, float operando2){
@@ -18,11 +19,11 @@ void testar (float a){
 
 int main(int argc, char argv) //função main
 {
+    int casa,bola,bicicleta=15,baralho;
     int arg1 = 5.25;
     int main = 5;
     int testar = 15;
     int arg2 = 6.75;
     int arg3 = soma(arg1,arg2) - subtracao(arg2,arg1) * multiplicacao (arg1,arg2) / divisao(arg2,arg1);
     printf ("%i", arg3);
-    return arg1;
 }

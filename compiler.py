@@ -16,7 +16,7 @@ class DOMI(IntEnum):
     NUMBER       = 7           # Number
 
 
-fileName = 'code3'
+fileName = 'code10'
 lexicon = Lexicon(DOMI, open(f"codeT/{fileName}.cpp", "r"))
 tokens = lexicon.tokenizer()
 
